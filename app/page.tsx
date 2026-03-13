@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import imageCompression from "browser-image-compression"
 
 type Ingredient = {
   ingredient_name: string
@@ -249,9 +250,29 @@ export default function HomePage() {
                       type="file"
                       accept="image/*"
                       style={{ display: 'none' }}
-                      onChange={(e) => {
+                      onChange={async (e) => {
                         const file = e.currentTarget.files?.[0]
-                        updateProduct(productIndex, 'image', file)
+                        if (!file) return
+
+                        try {
+                          const compressedBlob = await imageCompression(file, {
+                            maxSizeMB: 0.8,
+                            maxWidthOrHeight: 1280,
+                            useWebWorker: true,
+                          })
+
+                          const compressedFile = new File(
+                            [compressedBlob],
+                            file.name,
+                            { type: compressedBlob.type || file.type }
+                          )
+
+                          updateProduct(productIndex, "image", compressedFile)
+
+                        } catch (error) {
+                          console.error("圖片壓縮失敗", error)
+                          alert("圖片處理失敗，請重新選擇照片")
+                        }
                       }}
                     />
                   </label>
