@@ -39,12 +39,3 @@ cp .env.example .env.local
 ```bash
 npm run dev
 ```
-
-打開：
-
-- 商家填寫頁：`http://localhost:3000`
-- 管理後台：`http://localhost:3000/admin`
-
-## 5. 注意
-
-目前 `/admin` 沒有做登入保護，建議你正式上線前至少加一層密碼或登入機制。
